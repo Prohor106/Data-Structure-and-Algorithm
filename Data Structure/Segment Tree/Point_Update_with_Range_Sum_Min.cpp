@@ -5,12 +5,13 @@ using namespace std;
 const ll M = 2e5+10;
 
 ll arr[M];
-ll seg[2][4*M]; // 0 index --> sum, 1 index --> min.
+ll segSum[4*M];
+ll segMin[4*M];
 
 void build(ll node, ll l, ll r) {
     if(l==r) {
-        seg[0][node] = arr[l];
-        seg[1][node] = arr[l];
+        segSum[node] = arr[l];
+        segMin[node] = arr[l];
         return;
     }
     ll mid = (l+r)>>1;
@@ -20,14 +21,14 @@ void build(ll node, ll l, ll r) {
     build(l_node, l, mid);
     build(r_node, mid+1, r);
 
-    seg[0][node] = seg[0][l_node] + seg[0][r_node];
-    seg[1][node] = min(seg[1][l_node], seg[1][r_node]);
+    segSum[node] = segSum[l_node] + segSum[r_node];
+    segMin[node] = min(segMin[l_node], segMin[r_node]);
 }
 
 void update(ll node, ll l, ll r, ll idx, ll val) {
     if(l==r) {
-        seg[0][node] = val;
-        seg[1][node] = val;
+        segSum[node] = val;
+        segMin[node] = val;
         return;
     }
     ll mid = (l+r)>>1;
@@ -41,13 +42,13 @@ void update(ll node, ll l, ll r, ll idx, ll val) {
         update(r_node, mid+1, r, idx, val);
     }
 
-    seg[0][node] = seg[0][l_node] + seg[0][r_node];
-    seg[1][node] = min(seg[1][l_node], seg[1][r_node]);
+    segSum[node] = segSum[l_node]+segSum[r_node];
+    segMin[node] = min(segMin[l_node], segMin[r_node]);
 }
 
 ll querySum(ll node, ll l, ll r, ll i, ll j) {
     if(r<i || l>j) return 0;
-    if(l>=i && r<=j) return seg[0][node];
+    if(l>=i && r<=j) return segSum[node];
 
     int mid = (l+r)>>1;
     int l_node = node*2;
@@ -60,7 +61,7 @@ ll querySum(ll node, ll l, ll r, ll i, ll j) {
 
 ll queryMin(ll node, ll l, ll r, ll i, ll j) {
     if(r<i || l>j) return INT_MAX;
-    if(l>=i && r<=j) return seg[1][node];
+    if(l>=i && r<=j) return segMin[node];
 
     int mid = (l+r)>>1;
     int l_node = node*2;
@@ -93,16 +94,11 @@ int main() {
             else {
                 ll i, j;
                 cin >> i >> j;
-                cout << querySum(1,1,n,i,j) << endl;
-                cout << queryMin(1,1,n,i,j) << endl;
+                cout << querySum(1, 1, n, i, j) << endl;
+                cout << queryMin(1, 1, n, i, j) << endl;
             }
         }
 
-        for(ll i=0; i<2; i++)
-            for(ll j=0; j<=4*n; j++) seg[i][j] = 0;
+        for(ll i=0; i<=4*n; i++) segMin[i] = 0, segSum[i] = 0;
     }
-
-    return 0;
 }
-
-
