@@ -19,7 +19,7 @@ void build(ll node, ll l, ll r) {
     build(l_node, l, mid);
     build(r_node, mid+1, r);
 
-    seg[node]  = seg[2*mid] + seg[2*mid+1];
+    seg[node]  = seg[l_node] + seg[r_node];
 }
 
 void update(ll node, ll l, ll r, ll i, ll j, ll val) {
@@ -48,7 +48,7 @@ void update(ll node, ll l, ll r, ll i, ll j, ll val) {
     update(l_node, l, mid, i, j, val);
     update(r_node, mid+1, r, i, j, val);
 
-    seg[node] = seg[2*node] + seg[2*node+1];
+    seg[node] = seg[l_node] + seg[r_node];
 }
 
 ll query(ll node, ll l, ll r, ll i, ll j) {
