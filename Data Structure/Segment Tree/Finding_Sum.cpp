@@ -42,7 +42,7 @@ void update(ll node, ll l, ll r, ll idx, ll val) {
 }
 
 ll query(ll node, ll l, ll r, ll i, ll j) {
-    if(r<i || l>j) return INT_MAX;
+    if(r<i || l>j) return 0;
     if(l>=i && r<=j) return seg[node];
 
     int mid = (l+r)>>1;
